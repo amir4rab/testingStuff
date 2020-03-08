@@ -29,7 +29,7 @@ const speakIt = ()=>{
     Synth.speak(speakText);
 };
 
-const playQuestionAudio = (e)=>{
+const playQuestionAudio = (e)=>{ 
     const text = e.target.parentElement.firstElementChild.innerHTML;
 
     //Chosing speak text
@@ -58,7 +58,17 @@ const playQuestionAudio = (e)=>{
 const Database = {
     Header: "ترجمه ی صحیح را انتخاب کنید",
     question: "ich heiße amir.",
-    answers: ["من من من من","تو تو تو تو"]
+    answers: [
+        {
+            answerText: "اسم من امیر است",
+            isAnswer: "true"
+        },
+        {
+            answerText: "اسم من امیر نیست",
+            isAnswer: "false"
+        }
+    ]
+
 }
 
 const creatCard = (Type,Content)=>{
@@ -109,8 +119,13 @@ const creatCard = (Type,Content)=>{
             answers.forEach((answer)=>{
                 const answerBtn = document.createElement("button");
                 answerBtn.className = `font-weight-bold my-2 mx-2 btn btn-light text-dark`;
-                answerBtn.innerHTML = answer;
+                answerBtn.innerHTML = answer.answerText;
                 AnswersSection.appendChild(answerBtn);
+                if(answer.isAnswer === `true`){
+                    answerBtn.addEventListener("click",()=>console.log(`YES booy....`));
+                }else{
+                    answerBtn.addEventListener("click",()=>console.log(`NO booy....`));
+                };
             });
 
             return AnswersSection;
