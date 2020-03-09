@@ -1,34 +1,15 @@
+let questionNumber = 0,
+    seriesNumber = 0,
+    quizCash = 0,
+    testfinished = false;
 const Synth = window.speechSynthesis;
 const getAllVoices = ()=>{
     const voices = speechSynthesis.getVoices();
     return voices;
 };
+
 //all documents on: https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
 window.speechSynthesis.onvoiceschanged = ()=> getAllVoices();
-const speakIt = ()=>{
-    //Chosing speak text
-    const speakText = new SpeechSynthesisUtterance("halo, ich haise panzer");
-
-    //Speak End
-    speakText.onend = ()=>console.log(`Done Talking....`);
-
-    //Speak Error
-    speakText.onerror = ()=>console.log(`Somting got fucked!...`);
-
-    //getAll Voices
-    const allVoices = getAllVoices()
-
-    //Selected Lang
-    allVoices.forEach(voice =>{
-        if(voice.lang === "de-DE"){
-            speakText.voice = voice;
-        }
-    });
-
-    //Speak it
-    Synth.speak(speakText);
-};
-
 const playQuestionAudio = (e)=>{ 
     const text = e.target.parentElement.firstElementChild.innerHTML;
 
@@ -55,22 +36,6 @@ const playQuestionAudio = (e)=>{
     Synth.speak(speakText);
 };
 
-const Database = {
-    Header: "ترجمه ی صحیح را انتخاب کنید",
-    question: "ich heiße amir.",
-    answers: [
-        {
-            answerText: "اسم من امیر است",
-            isAnswer: "true"
-        },
-        {
-            answerText: "اسم من امیر نیست",
-            isAnswer: "false"
-        }
-    ]
-
-}
-
 const creatCard = (Type,Content)=>{
     if(Type === `simple`){
         //Creating Card Elemnt
@@ -79,7 +44,7 @@ const creatCard = (Type,Content)=>{
 
         //Creating Image Elemnt
         const imageElemnt = document.createElement("img");
-        imageElemnt.src = `https://images.unsplash.com/photo-1542948338-ded3dbb75080?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=1280`;
+        imageElemnt.src = Content.photoUrl;
         imageElemnt.className = `card-img-top`;
         card.appendChild(imageElemnt);
 
@@ -89,7 +54,7 @@ const creatCard = (Type,Content)=>{
 
         //creating Text Elemnts Header
         const Header = document.createElement("p");
-        Header.className = `card-title h5 mb-3 text-right`
+        Header.className = `container card-title h5 mb-3 text-right`
         Header.innerHTML = Content.Header;
         console.log()
         textErea.appendChild(Header);
@@ -103,11 +68,13 @@ const creatCard = (Type,Content)=>{
         QuestionP.innerHTML = Content.question;
         Question.appendChild(QuestionP);
 
-        const QuestionB = document.createElement("button");
-        QuestionB.className = `align-middle btn btn-dark mx-2`;
-        QuestionB.innerHTML = `🔊`;
-        QuestionB.addEventListener("click",(e)=>playQuestionAudio(e));
-        Question.appendChild(QuestionB);
+        if(Content.hasAudio === `true`){
+            const QuestionB = document.createElement("button");
+            QuestionB.className = `align-middle btn btn-dark mx-2`;
+            QuestionB.innerHTML = `🔊`;
+            QuestionB.addEventListener("click",(e)=>playQuestionAudio(e));
+            Question.appendChild(QuestionB);
+        };
 
         textErea.appendChild(Question);
 
@@ -116,15 +83,30 @@ const creatCard = (Type,Content)=>{
             const AnswersSection = document.createElement("div");
             AnswersSection.className = `row d-flex justify-content-center`;
 
+            const checkIfTrue = ()=>{
+                let falseAnswers = document.querySelectorAll(".isFalse");
+                falseAnswers.forEach((Btn)=>{
+                    Btn.className = "font-weight-bold my-2 mx-2 btn btn-danger text-dark isFalse"
+                });
+                let tureAnswers = document.querySelectorAll(".isAnswer");
+                tureAnswers.forEach((Btn)=>{
+                    Btn.className = "font-weight-bold my-2 mx-2 btn btn-success text-dark isAnswer"
+                    goToNextBtnToggle();
+                    console.log(`goToNextBtnToggle has been called`)
+                });
+            };
+
             answers.forEach((answer)=>{
                 const answerBtn = document.createElement("button");
                 answerBtn.className = `font-weight-bold my-2 mx-2 btn btn-light text-dark`;
                 answerBtn.innerHTML = answer.answerText;
                 AnswersSection.appendChild(answerBtn);
                 if(answer.isAnswer === `true`){
-                    answerBtn.addEventListener("click",()=>console.log(`YES booy....`));
+                    answerBtn.className += " isAnswer";
+                    answerBtn.addEventListener("click",(e)=>{checkIfTrue()});
                 }else{
-                    answerBtn.addEventListener("click",()=>console.log(`NO booy....`));
+                    answerBtn.addEventListener("click",(e)=>{checkIfTrue()});
+                    answerBtn.className += " isFalse";
                 };
             });
 
@@ -140,6 +122,27 @@ const creatCard = (Type,Content)=>{
         //retuning the card
         return card;
     };
+};
+
+const goToNextBtnToggle = ()=>{
+    if(document.querySelector(`#goToNextBtn`) === null){
+        let Btn = document.createElement("button");
+        Btn.id = `goToNextBtn`;
+        Btn.className = `btn btn-success font-weight-bold container mx-5`;
+        Btn.innerHTML = `سوال بعدی`;
+        Btn.addEventListener("click",()=>engineQuiz(Data));
+        document.getElementById(`nextButtonSection`).appendChild(Btn);
+    }else{
+        document.getElementById(`nextButtonSection`).innerHTML = ``;
+    }
 }
-document.getElementById(`speakIt`).addEventListener("click",()=>speakIt());
-document.getElementById(`cardSection`).appendChild(creatCard(`simple`,Database))
+const Data = dataCenter.returnData()
+const engineQuiz= (Data)=>{
+    let thisQuiz = Data[seriesNumber].Data[questionNumber];
+    document.getElementById(`cardSection`).innerHTML = ``;
+    document.getElementById(`cardSection`).appendChild(creatCard(thisQuiz.type,thisQuiz));
+    questionNumber++
+    testfinished ? testfinished = false : testfinished = false;
+    goToNextBtnToggle();
+};
+engineQuiz(Data);
