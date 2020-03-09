@@ -82,7 +82,7 @@ const DataCenter = [
                     photoUrl: "https://lh3.googleusercontent.com/BIjH767svaFxvqyhZd7GxuFnhDy52ssjnwktb5o2c1X2DUqTIEprg8yi2NHKiVGSEDuPLpcXZljy03oSmZU5L8zTw2gK906rZqWoOu___MThsKjlWp2pyi1Vrj27DzpNO9eiw5qEIFOiGEbD-qpyD1rh0lRWnqoj29Bb494OAEoqithhFdDkiTj8ZP2sfXqrk0v0804wR16BjfDttDZK_1Yv5OmE5r68vzGkyOJ0mP-qana_jyzCcvO2aJD_HytIB55LRrXPi5_0IFP8wjqw188DEYXDQYzO_2ZdSxnj00rGWEA8axEAV_d8kWnG3vR7yuDVqYjGeLPyWrRnH9Q5bQtHcAAk20HIA262j-5uJJ2R7DKi3mGm9CrGINIiGiEtOlTmfAuUF_qPlG9c_IHzOt6MNiPagSIId-6O6D0S0V7TVu5MT1SnjBBNpAfB25gH1wve9u_fmVwnUyb3AKYlhs4PC70OHZDhFPHJszyEc5UyqxjNnzfIwzsGGljd7CZmcrg5BK73v6VkpYAc6XsAqyULOFn9kMWnuav3DrrXh2xBRJ0C4jrRFurdNweH93KHFjlezAOfoULEwVWk1RF68BL7U2JTT1pfvNRZx6bCC8tm7leJksz43ZOUQSJkKhLRYV2R-6F7UM68U5_tpgZf2F4iRHxVqUwgCWaVGqr3H9C293I-dUUdUA=w1280-h400-no",
                     Header: "ترجمه ی صحیح را انتخاب کنید",
                     type: "simple",
-                    hasAudio: "false",
+                    hasAudio: "true",
                     question: "Metro",
                     answers: [
                             {
